@@ -1,0 +1,27 @@
+# Raw CSVs are too large for git (~92 MB each) — download from Kaggle.
+# The gzipped main dataset (~18 MB) IS committed so the deployed app has data.
+data/*.csv
+!data/.gitkeep
+!data/DataCoSupplyChainDataset.csv.gz
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local dev tooling (not needed to run or deploy the app)
+.claude/
+.agents/
+skills-lock.json
