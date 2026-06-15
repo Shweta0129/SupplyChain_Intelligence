@@ -40,6 +40,26 @@ Dataset: https://www.kaggle.com/datasets/shashwatwork/dataco-smart-supply-chain-
 - **Fully filterable sidebar** — Market, Segment, Shipping Mode, Department, Year,
   Order Status.
 
+## Deploy (free, no credit card)
+
+This app deploys on **Streamlit Community Cloud** straight from GitHub. The
+dataset ships gzipped in the repo (`data/DataCoSupplyChainDataset.csv.gz`, ~18 MB),
+so there's nothing else to host — the loader reads the compressed file directly.
+
+1. Create an empty repo on GitHub named **SupplyChain_Intelligence** (no README).
+2. Push this project:
+   ```bash
+   git remote add origin https://github.com/<your-username>/SupplyChain_Intelligence.git
+   git push -u origin main
+   ```
+3. Go to **share.streamlit.io** → sign in with GitHub → **New app**.
+4. Pick the repo, branch `main`, main file `app.py` → **Deploy**.
+
+Your app goes live at `https://<something>.streamlit.app` in ~2 minutes.
+
+> Hosting the data elsewhere instead? Set a `DATA_URL` secret (app → Settings →
+> Secrets) to a direct CSV link and the loader will fetch from there.
+
 ## Project structure
 
 ```
