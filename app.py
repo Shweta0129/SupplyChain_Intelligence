@@ -559,7 +559,7 @@ with tab_delivery:
                 hovertemplate="%{x} days: %{y:,} orders<extra></extra>"))
             style_fig(fig, 300)
             fig.update_layout(bargap=0.08, yaxis=dict(gridcolor=GRID),
-                              xaxis=dict(title="days late", titlefont=dict(size=10)))
+                              xaxis=dict(title=dict(text="days late", font=dict(size=10))))
             fig.add_vline(x=0, line=dict(color=MINT, width=1.6, dash="dash"), opacity=0.7)
             show(fig)
         except Exception:
@@ -633,8 +633,8 @@ with tab_profit:
                             colorbar=dict(title="margin %", thickness=9, len=0.7)),
                 hovertemplate="Disc %{x:.0f}%<br>Profit %{y:$,.0f}<extra></extra>"))
             style_fig(fig, 320)
-            fig.update_layout(xaxis=dict(title="discount %", titlefont=dict(size=10), ticksuffix="%"),
-                              yaxis=dict(gridcolor=GRID, title="profit $", titlefont=dict(size=10)))
+            fig.update_layout(xaxis=dict(title=dict(text="discount %", font=dict(size=10)), ticksuffix="%"),
+                              yaxis=dict(gridcolor=GRID, title=dict(text="profit $", font=dict(size=10))))
             fig.add_hline(y=0, line=dict(color=MUTED, width=1, dash="dot"), opacity=0.5)
             show(fig)
         except Exception:

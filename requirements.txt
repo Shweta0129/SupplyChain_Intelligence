@@ -1,6 +1,8 @@
-streamlit==1.35.0
-pandas==2.2.3
-plotly==5.22.0
-scikit-learn==1.4.2
-numpy==1.26.4
-openpyxl==3.1.2
+# Floors chosen so the installer uses prebuilt wheels (incl. Python 3.14 on
+# Streamlit Cloud) instead of compiling from source. numpy 2 needs Streamlit>=1.37.
+streamlit>=1.39
+pandas>=2.2.2
+numpy>=2.1
+plotly>=5.22
+scikit-learn>=1.6
+openpyxl>=3.1.2
