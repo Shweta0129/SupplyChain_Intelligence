@@ -1,0 +1,196 @@
+@import "tailwindcss";
+
+/*
+  Control-tower design language, carried over from the Streamlit original:
+  a quiet white surface, one navy-gradient hero stat, everything else precise
+  and recessive. Dark mode is a *selected* theme — its own surface and ink
+  steps, not an automatic flip.
+*/
+
+:root {
+  color-scheme: light dark;
+
+  --canvas: #eef2fb;
+  --card: #ffffff;
+  --line: #e6ecf7;
+  --ink: #0b1437;
+  --ink-2: #3a4258;
+  --muted: #8a93a8;
+  --brand: #2b5fcf;
+  --brand-dk: #1e3a8a;
+  --brand-soft: #c8d9f5;
+  --mint: #1d9e75;
+  --amber: #d97706;
+  --red: #b91c1c;
+  --grid: #eef1f8;
+  --panel: linear-gradient(160deg, #e4f3ee, #d6eee8);
+  --panel-line: rgba(29, 158, 117, 0.18);
+  --shadow-sm: 0 1px 3px rgba(11, 20, 55, 0.05);
+  --shadow-lg: 0 14px 34px rgba(11, 20, 55, 0.1);
+  --chip: #f4f7fd;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --canvas: #0a0f1e;
+    --card: #131a2c;
+    --line: #24304a;
+    --ink: #eef2fb;
+    --ink-2: #c3cbdd;
+    --muted: #8d98b2;
+    --brand: #7aa2f7;
+    --brand-dk: #3b6fd4;
+    --brand-soft: #2c3d63;
+    --mint: #3ecf9a;
+    --amber: #f0a836;
+    --red: #f0736f;
+    --grid: #1e2842;
+    --panel: linear-gradient(160deg, #16302a, #12261f);
+    --panel-line: rgba(62, 207, 154, 0.22);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 14px 34px rgba(0, 0, 0, 0.45);
+    --chip: #1b2438;
+  }
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-card: var(--card);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-ink2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-brand: var(--brand);
+  --color-mint: var(--mint);
+  --color-amber: var(--amber);
+  --color-red: var(--red);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-grotesk), var(--font-inter), ui-sans-serif, sans-serif;
+}
+
+html,
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: 0 14px 34px rgba(43, 95, 207, 0.28);
+  }
+  50% {
+    box-shadow: 0 18px 44px rgba(43, 95, 207, 0.42);
+  }
+}
+
+.fade-up {
+  animation: fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ── surfaces ───────────────────────────────────────────────────────────── */
+.surface {
+  background: var(--card);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
+}
+
+.card-hover {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+@media (hover: hover) {
+  .card-hover:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+.eyebrow {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+
+.label-xs {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.stat-value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+
+.kpi-hero {
+  background: linear-gradient(140deg, #2b5fcf 0%, #1e3a8a 100%);
+  border: none !important;
+  animation:
+    fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both,
+    glow 5s ease-in-out 1s infinite;
+}
+
+.anomaly-panel {
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+}
+
+/* ── native control theming ─────────────────────────────────────────────── */
+select,
+input,
+button {
+  font: inherit;
+  color: inherit;
+}
+
+/* Scrollbars inside the filter rail */
+.thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+
+/* Recharts overrides — recessive grid, no focus outline halo on bars */
+.recharts-cartesian-axis-tick text {
+  fill: var(--muted);
+  font-size: 10px;
+}
+.recharts-surface:focus,
+.recharts-wrapper:focus {
+  outline: none;
+}
+.recharts-tooltip-wrapper {
+  outline: none;
+  z-index: 30;
+}
