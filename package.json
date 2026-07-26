@@ -5,6 +5,7 @@
   "description": "Supply Chain Intelligence — control-tower analytics on 180K DataCo Global orders. Next.js port of the original Streamlit dashboard.",
   "scripts": {
     "aggregate": "python scripts/aggregate.py",
+    "verify": "python scripts/verify.py",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

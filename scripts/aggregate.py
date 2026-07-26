@@ -446,19 +446,25 @@ def main() -> None:
     df = clean_and_engineer(load())
     print(f"cleaned rows: {len(df):,}")
 
-    # Sorting is purely a compression win — grouping like values together lets
-    # gzip collapse the dictionary-encoded columns. Aggregates are order-free.
-    df = df.sort_values(
-        ["order_date", "Market", "Order Region", "Order Country", "Product Name"],
-        kind="stable",
-    ).reset_index(drop=True)
-
+    # Row ORDER is load-bearing here, in two places, so everything that is
+    # order-sensitive runs on the dataset exactly as Streamlit sees it:
+    #   · IsolationForest subsamples, so a reordered frame flags a different set
+    #   · the anomaly table's head(50) breaks Sales ties by position
     print("running Isolation Forest …")
     ml_mask = ml_anomaly_mask(df)
     print(f"ML anomalies flagged: {int(ml_mask.sum()):,}")
 
     print("building aggregates …")
     aggregates = build_aggregates(df, ml_mask)
+
+    # Only now reorder, and only for the binary: grouping like values together
+    # lets gzip collapse the dictionary-encoded columns. Aggregates are done.
+    order = df.sort_values(
+        ["order_date", "Market", "Order Region", "Order Country", "Product Name"],
+        kind="stable",
+    ).index
+    ml_mask = ml_mask[order.to_numpy()]
+    df = df.loc[order].reset_index(drop=True)
 
     # ── dictionaries + columns ────────────────────────────────────────────────
     markets, market_codes = encode_dim(df["Market"], np.uint8)
