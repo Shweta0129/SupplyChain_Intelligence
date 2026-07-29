@@ -5,6 +5,7 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
+  Label,
   LabelList,
   ReferenceLine,
   Tooltip,
@@ -85,13 +86,16 @@ export default function VerticalBars<T extends { name: string }>({
             stroke={p.red}
             strokeDasharray="4 4"
             strokeOpacity={0.7}
-            label={{
-              value: reference.label,
-              position: "insideTopRight",
-              fontSize: 10,
-              fill: p.red,
-            }}
-          />
+          >
+            {/* Recharts v3 wants a real <Label> child; the `label` prop is ignored. */}
+            <Label
+              value={reference.label}
+              position="insideTopRight"
+              fontSize={10}
+              fill={p.red}
+              offset={6}
+            />
+          </ReferenceLine>
         )}
         <Bar
           dataKey={(d: T) => Number(d[dataKey])}

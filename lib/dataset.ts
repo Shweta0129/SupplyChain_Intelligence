@@ -61,8 +61,15 @@ async function gunzip(buf: ArrayBuffer): Promise<ArrayBuffer> {
 export async function loadDataset(meta: Meta): Promise<Dataset> {
   const res = await fetch("/data/dataset.bin");
   if (!res.ok) throw new Error(`dataset.bin: ${res.status}`);
-  const raw = await gunzip(await res.arrayBuffer());
+  return decodeDataset(await gunzip(await res.arrayBuffer()), meta);
+}
 
+/**
+ * Split out from the fetch so the same decode path can run under Node —
+ * `scripts/verify-client.mjs` decodes the shipped binary and asserts that
+ * `computeAggregates` over every row reproduces `aggregates.json`.
+ */
+export function decodeDataset(raw: ArrayBuffer, meta: Meta): Dataset {
   let off = 0;
   // Head of the blob: the four float32 measure dictionaries, in meta order.
   const dicts: Record<string, Float32Array> = {};
@@ -608,9 +615,12 @@ export function computeAggregates(ds: Dataset, idx: Uint32Array): Aggregates {
 
   const bandLabels = ds.meta.bands.labels;
   const bandCounts = groupCount(idx, ds.band, bandLabels.length);
-  const revenueBands = bandLabels
-    .map((name, i) => ({ name, count: bandCounts[i] }))
-    .filter((r) => r.count > 0);
+  // Every band is kept, zeros included — pandas' value_counts over a Categorical
+  // does the same, and a missing band would silently change the axis.
+  const revenueBands = bandLabels.map((name, i) => ({
+    name,
+    count: bandCounts[i],
+  }));
 
   const regionSales = groupSum(idx, ds.region, ds.sales, d.region.length);
   const regionProfit = groupSum(idx, ds.region, ds.profit, d.region.length);

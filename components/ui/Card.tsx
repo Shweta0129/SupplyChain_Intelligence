@@ -18,8 +18,10 @@ export default function Card({
   action?: ReactNode;
 }) {
   return (
+    // min-w-0 matters: a CSS grid item defaults to min-width:auto, which lets
+    // the chart's intrinsic width win and collapses ResponsiveContainer to ~80px.
     <section
-      className={`surface card-hover fade-up flex flex-col rounded-[20px] ${className}`}
+      className={`surface card-hover fade-up flex min-w-0 flex-col rounded-[20px] ${className}`}
     >
       <header className="flex items-start justify-between gap-3 px-4 pt-4 pb-1">
         <div className="min-w-0">
