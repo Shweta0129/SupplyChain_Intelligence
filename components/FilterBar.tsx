@@ -35,11 +35,15 @@ function MultiSelect({
     };
   }, [open]);
 
+  const plural = (w: string) =>
+    /(s|x|z|ch|sh)$/.test(w) ? `${w}es` : /[^aeiou]y$/.test(w) ? `${w.slice(0, -1)}ies` : `${w}s`;
+
   const summary = selected.length
     ? selected.length === 1
       ? selected[0]
       : `${selected.length} selected`
-    : `All ${label.toLowerCase()}s`;
+    // Naive +"s" turned STATUS into "All statuss".
+    : `All ${plural(label.toLowerCase())}`;
 
   return (
     <div ref={ref} className="relative">
