@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import FilterBar from "@/components/FilterBar";
 import KpiRow from "@/components/KpiRow";
+import AiAnalyst from "@/components/AiAnalyst";
 import OverviewTab from "@/components/tabs/OverviewTab";
 import DeliveryTab from "@/components/tabs/DeliveryTab";
 import ProfitabilityTab from "@/components/tabs/ProfitabilityTab";
@@ -94,6 +95,17 @@ export default function Dashboard({
 
   const empty = active && matched === 0;
 
+  // Row indices for the AI analyst (re-derived only when filters change).
+  const sliceIdx = useMemo(() => {
+    if (!dataset) return null;
+    if (!active) {
+      const all = new Uint32Array(dataset.rows);
+      for (let i = 0; i < all.length; i++) all[i] = i;
+      return all;
+    }
+    return selectRows(dataset, filters);
+  }, [dataset, filters, active]);
+
   return (
     <main className="mx-auto w-full max-w-[1560px] px-3 pt-3 pb-10 sm:px-5 lg:px-8">
       {/* ── top nav ─────────────────────────────────────────────────────── */}
@@ -138,7 +150,10 @@ export default function Dashboard({
         </p>
       </header>
 
-      <div className="mb-4">
+      {/* z-30: the fade-up animation gives every card its own stacking context,
+          so without this the open dropdown paints *under* the KPI tiles below.
+          Stays under the sticky nav (z-50). */}
+      <div className="relative z-30 mb-4">
         <FilterBar
           meta={meta}
           filters={filters}
@@ -158,6 +173,12 @@ export default function Dashboard({
       <div className="mb-4">
         <KpiRow k={agg.kpis} base={initial.kpis} />
       </div>
+
+      {!empty && (
+        <div className="mb-4">
+          <AiAnalyst dataset={dataset} idx={sliceIdx} />
+        </div>
+      )}
 
       {/* ── tabs ────────────────────────────────────────────────────────── */}
       <div
